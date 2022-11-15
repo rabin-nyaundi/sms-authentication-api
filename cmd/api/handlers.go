@@ -5,6 +5,12 @@ import (
 	"net/http"
 )
 
+type JSONResponse struct {
+	Status  int         `json:"status,omitempty"`
+	Message string      `json:"message,omitempty"`
+	ata    interface{} `json:"data,omitempty"`
+}
+
 type envelope map[string]interface{}
 
 func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +44,14 @@ func (app *application) sendSMSHandler(w http.ResponseWriter, r *http.Request) {
 		app.logger.PrintError(err, nil)
 	}
 
-	fmt.Println(input.PhoneNumber)
+	err = app.writeJSON(w, http.StatusOK, JSONResponse{
+		Status:  http.StatusOK,
+		Message: "otp code sent successfully",
+	})
+
+	if err != nil {
+		app.logger.PrintError(err, nil)
+	}
 }
 
 func (app *application) verifyOTPHandler(w http.ResponseWriter, r *http.Request) {

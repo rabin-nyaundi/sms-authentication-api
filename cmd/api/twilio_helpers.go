@@ -43,15 +43,6 @@ func (app *application) sendOTP(phonenumber string) error {
 }
 
 func (app *application) verifyOTP(phonenumber, otpcode string) error {
-	
-	// Load environment variables from .env
-	if err := godotenv.Load("twilio.env"); err != nil {
-		app.logger.PrintError(err, nil)
-		return err
-	}
-
-	app.logger.PrintInfo("Twilio sms env loaded successfully", nil)
-	
 	client := twilio.NewRestClient()
 
 	params := verify.CreateVerificationCheckParams{}
